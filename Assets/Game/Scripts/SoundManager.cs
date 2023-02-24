@@ -1,0 +1,84 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum SoundName
+{
+    GameOver,
+    ButtonCllick,
+    Collect,
+    Correct,
+    Wrong,
+    forAlpha,
+    win,
+    GreetingSound
+}
+
+public class SoundManager : MonoBehaviour
+{
+    [SerializeField] public AudioSource Sound;
+  
+    [SerializeField] public AudioClip GameOver;
+    [SerializeField] private AudioClip ButtonClick;
+    [SerializeField] private AudioClip CorrectClick;
+    [SerializeField] private AudioClip WrongClick;
+    [SerializeField] private AudioClip WinClick;
+    [SerializeField] private AudioClip[] ForAlphaClip;
+    [SerializeField] private AudioClip[] GreetingClip;
+    
+    [SerializeField] AudioClip Collect_sound;
+
+    public static SoundManager instance { get; set; }
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+
+    public void Play_Btn_Click_Sound()   
+    {
+        PlaySound_(ButtonClick);
+    }
+
+    public void PauseSound_()
+    {
+        Sound.Stop();
+    }
+    public void PlaySound_(AudioClip clip)
+    {
+        if (Sound != null)
+                Sound.PlayOneShot(clip);
+    }
+
+    public void SoundPlay(SoundName soundName)
+    {
+        switch (soundName)
+        {
+            case SoundName.GameOver:
+                PlaySound_(GameOver);
+                break;
+            case SoundName.Collect:
+                PlaySound_(Collect_sound);
+                break;
+            case SoundName.ButtonCllick:
+                PlaySound_(ButtonClick);
+                break;
+            case SoundName.Correct:
+                PlaySound_(CorrectClick);
+                break;
+            case SoundName.Wrong:
+                PlaySound_(WrongClick);
+                break;
+            case SoundName.win:
+                PlaySound_(WinClick);
+                break;
+            case SoundName.forAlpha:
+                PlaySound_(ForAlphaClip[ObjectMatching.instance.AlphaCounter]);
+                break;
+            case SoundName.GreetingSound:
+                PlaySound_(GreetingClip[ObjectMatching.instance.GreetingSoundType]);
+                break;
+        }
+    }
+}
