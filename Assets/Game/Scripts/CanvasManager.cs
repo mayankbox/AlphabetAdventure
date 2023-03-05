@@ -34,6 +34,18 @@ public class CanvasManager : MonoBehaviour
     public AudioSource SoundAudiosource;
     static bool isFirstTime;
 
+
+    [Header("ObjectMatchingOBJS")]
+    public GameObject playObjectMatching;
+    public GameObject ObjectMatchingManager;
+    public GameObject ObjectMatchingWin;
+
+
+    [Header("AlphabetMatchingOBJS")]
+    public GameObject playAlphabetMatching;
+    public GameObject AlphabetMatchingManager;
+    public GameObject AlphabetMatchingwin;
+
     private void Awake()
     {
         instance = this;
@@ -58,8 +70,6 @@ public class CanvasManager : MonoBehaviour
         if (isFirstTime == false)
         {
              SplashPanel.SetActive(true);
-
-            print("fsfsfsfs");
             isFirstTime = true;
             StartCoroutine(SplashClick());
         }
@@ -77,7 +87,6 @@ public class CanvasManager : MonoBehaviour
             else
             {
                 SoundToggle.gameObject.SetActive(true);
-
                 GameStart();
                 PlayerPrefs.SetInt("IsHomeFalse", 0);
             }
@@ -87,7 +96,6 @@ public class CanvasManager : MonoBehaviour
    IEnumerator SplashClick()
     {
         yield return new WaitForSeconds(5.5f);
-       // SoundManager.instance.SoundPlay(SoundName.ButtonCllick);
         SoundToggle.gameObject.SetActive(true);
 
         HomePanel.SetActive(true);
@@ -110,8 +118,49 @@ public class CanvasManager : MonoBehaviour
         PlayingPanel.SetActive(true);
         GameManager.instance.GameStart();
 
+        switch(PlayerPrefs.GetString("GameType"))
+        {
+            case "ObjectMatching":
+                ObjectMatchingMode();
+                break;
+            case "AlphabetMatching":
+                AlphabetMatchingMode();
+                break;
+            case "Train":
+                TrainMode();
+                break;
+            case "Tracing":
+                TracingMode();
+                break;
+        }
+        
+    }
+
+    void ObjectMatchingMode()
+    {
+        GameManager.instance.gametype = GameType.ObjectMatching;
+        playObjectMatching.SetActive(true);
+        ObjectMatchingManager.SetActive(true);
         ObjectMatching.instance.GenrateMainTxt();
         ObjectMatching.instance.HandIMG.gameObject.SetActive(false);
+        ObjectMatchingWin.SetActive(true);
+
+    }
+    void AlphabetMatchingMode()
+    {
+        GameManager.instance.gametype = GameType.AlphabetMatching;
+        playAlphabetMatching.SetActive(true);
+        AlphabetMatchingManager.SetActive(true);
+        AlphabetMatchingwin.SetActive(true);
+    }
+    void TrainMode()
+    {
+        GameManager.instance.gametype = GameType.Train;
+
+    }
+    void TracingMode()
+    {
+        GameManager.instance.gametype = GameType.Tracing;
 
     }
 
@@ -162,6 +211,7 @@ public class CanvasManager : MonoBehaviour
 
     public void RestartLoad()
     {
+        PlayerPrefs.SetString("GameType", (GameManager.instance.gametype).ToString());
         Time.timeScale = 1;
         SceneLoad();
         PlayerPrefs.SetInt("IsHomeFalse", 1);

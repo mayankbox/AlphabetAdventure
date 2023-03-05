@@ -121,7 +121,6 @@ public class ObjectMatching : MonoBehaviour
 
             HandIMG.gameObject.SetActive(false);
             StopCoroutine(StartHandAnim());
-            DOTween.Kill(DOTweenIDs.Example3);
         }
 
 
@@ -223,7 +222,6 @@ public class ObjectMatching : MonoBehaviour
             HandIMG.transform.SetParent(null);
             HandIMG.gameObject.SetActive(false);
             IsHandAnim = false;
-            DOTween.Kill(DOTweenIDs.Example3);
             SoundManager.instance.SoundPlay(SoundName.Correct);
 
             if (AlphaCounter > AlphaArrayIMG.Length - 1)//AlphaArrayIMG.Length-1

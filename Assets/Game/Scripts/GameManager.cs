@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; set; }
     public GameState Gamestate = GameState.Preparing;
-    public GameType gametype = GameType.ObjectMatching;
+    public GameType gametype;
 
     public static GameObject Player;
 
@@ -70,18 +70,22 @@ public class GameManager : MonoBehaviour
     public void ObjectMatching()
     {
         gametype = GameType.ObjectMatching;
+        PlayerPrefs.SetString("GameType", (gametype).ToString());
     }
     public void AlphabetMatching()
     {
         gametype = GameType.AlphabetMatching;
+        PlayerPrefs.SetString("GameType", (gametype).ToString());
     }
     public void Tracing()
     {
         gametype = GameType.Tracing;
+        PlayerPrefs.SetString("GameType", (gametype).ToString());
     }
     public void Train()
     {
         gametype = GameType.Train;
+        PlayerPrefs.SetString("GameType", (gametype).ToString());
     }
     public static void MinusCoin(int _amount)
     {

@@ -11,7 +11,12 @@ public enum SoundName
     Wrong,
     forAlpha,
     win,
-    GreetingSound
+    GreetingSound,
+    GreetingSoundAlphabetMatch,
+    DogCatRatRun,
+    Ballonpop,
+    Ballonwrong,
+    Firecraker
 }
 
 public class SoundManager : MonoBehaviour
@@ -26,7 +31,19 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip[] ForAlphaClip;
     [SerializeField] private AudioClip[] GreetingClip;
     
+
+
     [SerializeField] AudioClip Collect_sound;
+
+
+    [Header("Alphabet_MAtching")]
+    [SerializeField] private AudioClip DogcatratRun;
+    [SerializeField] private AudioClip GreetingClipAlphabetMatching;
+    [SerializeField] private AudioClip BallonPop;
+    [SerializeField] private AudioClip WrongBallon;
+    [SerializeField] private AudioClip FireCracker;
+
+    
 
     public static SoundManager instance { get; set; }
 
@@ -78,6 +95,21 @@ public class SoundManager : MonoBehaviour
                 break;
             case SoundName.GreetingSound:
                 PlaySound_(GreetingClip[ObjectMatching.instance.GreetingSoundType]);
+                break;
+            case SoundName.GreetingSoundAlphabetMatch:
+                PlaySound_(GreetingClipAlphabetMatching);
+                break;
+            case SoundName.Ballonpop:
+                PlaySound_(BallonPop);
+                break;
+            case SoundName.Ballonwrong:
+                PlaySound_(WrongBallon);
+                break;
+            case SoundName.Firecraker:
+                PlaySound_(FireCracker);
+                break;
+            case SoundName.DogCatRatRun:
+                PlaySound_(DogcatratRun);
                 break;
         }
     }
