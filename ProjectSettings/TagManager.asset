@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ballon
+  - Effects
+  - CargoBox
   layers:
   - Default
   - TransparentFX

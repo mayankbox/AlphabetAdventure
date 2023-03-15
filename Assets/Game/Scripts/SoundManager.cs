@@ -16,7 +16,11 @@ public enum SoundName
     DogCatRatRun,
     Ballonpop,
     Ballonwrong,
-    Firecraker
+    Firecraker,
+    TrainRunning,
+    CargoHit,
+    forAlphaTrain,
+    CraneMoving
 }
 
 public class SoundManager : MonoBehaviour
@@ -43,7 +47,14 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip WrongBallon;
     [SerializeField] private AudioClip FireCracker;
 
-    
+
+
+    [Header("Train")]
+    [SerializeField] private AudioClip TrainMovingClip;
+    [SerializeField] private AudioClip CargoHitClip;
+    [SerializeField] private AudioClip[] ForAlphaClipTrain;
+    [SerializeField] private AudioClip CraneMovingClip;
+
 
     public static SoundManager instance { get; set; }
 
@@ -110,6 +121,18 @@ public class SoundManager : MonoBehaviour
                 break;
             case SoundName.DogCatRatRun:
                 PlaySound_(DogcatratRun);
+                break;
+            case SoundName.TrainRunning:
+                PlaySound_(TrainMovingClip);
+                break;
+            case SoundName.CargoHit:
+                PlaySound_(CargoHitClip);
+                break;
+            case SoundName.forAlphaTrain:
+                PlaySound_(ForAlphaClipTrain[TrainManager.instance.AlphabetWiseCounter-1]);
+                break;
+            case SoundName.CraneMoving:
+                PlaySound_(CraneMovingClip);
                 break;
         }
     }

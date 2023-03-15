@@ -224,11 +224,13 @@ public class ObjectMatching : MonoBehaviour
             IsHandAnim = false;
             SoundManager.instance.SoundPlay(SoundName.Correct);
 
-            if (AlphaCounter > AlphaArrayIMG.Length - 1)//AlphaArrayIMG.Length-1
+            if (AlphaCounter > 4)//AlphaArrayIMG.Length-1
             {
                 Invoke("WinCondition", 1f);
                 Invoke("WaitPopUpOn", 4f);
                 NextBtnObj.SetActive(false);
+                PlayerPrefs.SetInt("ObjectTicket", 1);
+                GameManager.instance.ObjTicket.transform.GetChild(1).gameObject.SetActive(false);
             }
 
             foreach (GameObject btns in BTNs)

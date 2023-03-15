@@ -137,7 +137,7 @@ public class DragWithRay : MonoBehaviour
                    
                     if (AlphabetMatching.instance.PlayUpperBallon.Count==0)
                     {
-                        if (AlphabetMatching.instance.AlphaSeries < 25)
+                        if (AlphabetMatching.instance.AlphaSeries < 4)///////25
                         {
                             SoundManager.instance.SoundPlay(SoundName.DogCatRatRun);
 
@@ -156,6 +156,8 @@ public class DragWithRay : MonoBehaviour
                             AlphabetMatching.instance.CornerLastAplha.gameObject.SetActive(false);
                             AlphabetMatching.instance.WinCondition();
                             AlphabetMatching.instance.WaitPopUpOn();
+                            PlayerPrefs.SetInt("AlphabetTicket", 1);
+                            GameManager.instance.AlphabetTicket.transform.GetChild(1).gameObject.SetActive(false);
                         }
                     }
                 }

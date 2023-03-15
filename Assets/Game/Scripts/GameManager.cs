@@ -9,6 +9,11 @@ public class GameManager : MonoBehaviour
     public GameState Gamestate = GameState.Preparing;
     public GameType gametype;
 
+    public GameObject AlphabetTicket;
+    public GameObject ObjTicket;
+    public GameObject TracingTicket;
+    public int ticketCounter;
+
     public static GameObject Player;
 
     private void Awake()
@@ -17,8 +22,25 @@ public class GameManager : MonoBehaviour
 
         Player = FindObjectOfType<PlayerManager>().gameObject;
     }
+    private void Start()
+    {
+        if (PlayerPrefs.GetInt("ObjectTicket") == 1)
+        {
+            ObjTicket.transform.GetChild(1).gameObject.SetActive(false);
+            ticketCounter++;
+        }
+        if (PlayerPrefs.GetInt("AlphabetTicket") == 1)
+        {
+            AlphabetTicket.transform.GetChild(1).gameObject.SetActive(false);
+            ticketCounter++;
+        }
+        if (PlayerPrefs.GetInt("TracingTicket") == 0)
+        {
+            TracingTicket.transform.GetChild(1).gameObject.SetActive(false);
+            ticketCounter++;
+        }
+    }
 
-#if UNITY_EDITOR
 
     public void Update()
     {
@@ -38,7 +60,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-#endif
 
     public void GameStart()
     {
@@ -47,10 +68,8 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        
         Gamestate = GameState.Over;
         CanvasManager.instance.GameOver();
-
     }
 
   

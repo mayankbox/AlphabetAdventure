@@ -46,6 +46,13 @@ public class CanvasManager : MonoBehaviour
     public GameObject AlphabetMatchingManager;
     public GameObject AlphabetMatchingwin;
 
+
+    [Header("TrainOBJS")]
+    public GameObject TicketCheck;
+    public GameObject playTrain;
+    public GameObject TrainManagerr;
+    public GameObject Trainwin;
+
     private void Awake()
     {
         instance = this;
@@ -145,6 +152,11 @@ public class CanvasManager : MonoBehaviour
         ObjectMatching.instance.HandIMG.gameObject.SetActive(false);
         ObjectMatchingWin.SetActive(true);
 
+        if(TicketCheck.activeSelf==true)
+        {
+            TicketCheck.SetActive(false);
+        }
+
     }
     void AlphabetMatchingMode()
     {
@@ -152,15 +164,44 @@ public class CanvasManager : MonoBehaviour
         playAlphabetMatching.SetActive(true);
         AlphabetMatchingManager.SetActive(true);
         AlphabetMatchingwin.SetActive(true);
+        if (TicketCheck.activeSelf == true)
+        {
+            TicketCheck.SetActive(false);
+        }
     }
     void TrainMode()
     {
-        GameManager.instance.gametype = GameType.Train;
-
+        
+        TicketCheck.SetActive(true);
+        Invoke("TicketCollecter", 2f);
     }
+
+    void TicketCollecter()
+    {
+        if (GameManager.instance.ticketCounter == 3)
+        {
+            TicketCheck.SetActive(false);
+
+            GameManager.instance.gametype = GameType.Train;
+            playTrain.SetActive(true);
+            TrainManagerr.SetActive(true);
+            Trainwin.SetActive(true);
+
+
+            StartCoroutine(TrainManager.instance.TrainMove());
+
+
+            
+        }
+    }
+
     void TracingMode()
     {
         GameManager.instance.gametype = GameType.Tracing;
+        if (TicketCheck.activeSelf == true)
+        {
+            TicketCheck.SetActive(false);
+        }
 
     }
 
