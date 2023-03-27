@@ -7,6 +7,14 @@ TagManager:
   - Ballon
   - Effects
   - CargoBox
+  - Path
+  - Collider
+  - Number
+  - Fill
+  - Start
+  - StarsEffect
+  - Message
+  - AdManager
   layers:
   - Default
   - TransparentFX

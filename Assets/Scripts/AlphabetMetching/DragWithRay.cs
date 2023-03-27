@@ -137,7 +137,7 @@ public class DragWithRay : MonoBehaviour
                    
                     if (AlphabetMatching.instance.PlayUpperBallon.Count==0)
                     {
-                        if (AlphabetMatching.instance.AlphaSeries < 4)///////25
+                        if (AlphabetMatching.instance.AlphaSeries < 25)///////25
                         {
                             SoundManager.instance.SoundPlay(SoundName.DogCatRatRun);
 
@@ -157,7 +157,8 @@ public class DragWithRay : MonoBehaviour
                             AlphabetMatching.instance.WinCondition();
                             AlphabetMatching.instance.WaitPopUpOn();
                             PlayerPrefs.SetInt("AlphabetTicket", 1);
-                            GameManager.instance.AlphabetTicket.transform.GetChild(1).gameObject.SetActive(false);
+                            GameManagerOwn.instance.AlphabetTicket.transform.GetChild(1).gameObject.SetActive(false);
+                            GameManagerOwn.instance.AlphabetTicket.transform.GetChild(2).gameObject.SetActive(false);
                         }
                     }
                 }
@@ -180,80 +181,80 @@ public class DragWithRay : MonoBehaviour
 
    public void NextBTN()
     {
-        AlphabetMatching.instance.StopHandAnim();
-        AlphabetMatching.instance.IsWaitingTimmerStart = false;
-        correctClickAfter = false;
-        CorrectClickAfterTimmer = 0;
-        AlphabetMatching.instance.RefreshBTN.interactable = false;
-        AlphabetMatching.instance.CornerOneAlpha.gameObject.SetActive(false);
-        AlphabetMatching.instance.CornerLastAplha.gameObject.SetActive(false);
-        foreach (Transform child in AlphabetMatching.instance.ParentOfBallonGenrate.transform)
+        if (AlphabetMatching.instance.AlphaSeries == 10 || AlphabetMatching.instance.AlphaSeries == 20)
         {
-            Destroy(child.gameObject);
+            AdManager.Instance.ShowInterstitialAd(() =>
+            {
+                AlphabetMatching.instance.StopHandAnim();
+                AlphabetMatching.instance.IsWaitingTimmerStart = false;
+                correctClickAfter = false;
+                CorrectClickAfterTimmer = 0;
+                AlphabetMatching.instance.RefreshBTN.interactable = false;
+                AlphabetMatching.instance.CornerOneAlpha.gameObject.SetActive(false);
+                AlphabetMatching.instance.CornerLastAplha.gameObject.SetActive(false);
+                foreach (Transform child in AlphabetMatching.instance.ParentOfBallonGenrate.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+                AlphabetMatching.instance.PlayUpperBallon.Clear();
+                AlphabetMatching.instance.PlayDownBallon.Clear();
+
+                correctClickAfter = false;
+                CorrectClickAfterTimmer = 0;
+                stepCompletePanel.SetActive(true);
+
+                RabbitJoy.transform.DOScale(Vector3.one, 1.5f);
+                RabbitJoy.transform.DOMoveX(RabbitJoy.transform.position.x, 3.5f).OnComplete(() =>
+                {
+                    RabbitJoy.transform.DOScale(Vector3.zero, 1.5f).OnComplete(() =>
+                    {
+                        if (AlphabetMatching.instance.AlphaSeries < 25)
+                        {
+
+                            stepCompletePanel.SetActive(false);
+                            AlphabetMatching.instance.StopHandAnim();
+                            StartCoroutine(AlphabetMatching.instance.SetAlphaBallone());
+                        }
+                    });
+                });
+            });
         }
-        AlphabetMatching.instance.PlayUpperBallon.Clear();
-        AlphabetMatching.instance.PlayDownBallon.Clear();
 
+        else
+        {
+            AlphabetMatching.instance.StopHandAnim();
+            AlphabetMatching.instance.IsWaitingTimmerStart = false;
+            correctClickAfter = false;
+            CorrectClickAfterTimmer = 0;
+            AlphabetMatching.instance.RefreshBTN.interactable = false;
+            AlphabetMatching.instance.CornerOneAlpha.gameObject.SetActive(false);
+            AlphabetMatching.instance.CornerLastAplha.gameObject.SetActive(false);
+            foreach (Transform child in AlphabetMatching.instance.ParentOfBallonGenrate.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            AlphabetMatching.instance.PlayUpperBallon.Clear();
+            AlphabetMatching.instance.PlayDownBallon.Clear();
 
+            correctClickAfter = false;
+            CorrectClickAfterTimmer = 0;
+            stepCompletePanel.SetActive(true);
 
-      //  NextButton.SetActive(false);
-      //  PreviousButton.SetActive(false);
-        correctClickAfter = false;
-        CorrectClickAfterTimmer = 0;
-        stepCompletePanel.SetActive(true);
-
-
-        //DogJoy.transform.position = new Vector2(-22.5f, -1.7f);
-        //DogJoy.transform.localScale = new Vector3(1, 1, 1);
-
-        //CatJoy.transform.position = new Vector2(-17.5f, -2f);
-        //CatJoy.transform.localScale = new Vector3(1, 1, 1);
-
-        //RatJoy.transform.position = new Vector2(-13f, -2.5f);
-        //RatJoy.transform.localScale = new Vector3(1, 1, 1);
-
-
-        //CatJoy.transform.DOMoveX(17.5f, 7f);
-        //RatJoy.transform.DOMoveX(22.5f, 7f);
-
-
-        //DogJoy.transform.DOMoveX(13, 7f).OnComplete(() =>
-        // {
-        //     if (AlphabetMatching.instance.AlphaSeries < 25)
-        //     {
-        //         DogJoy.transform.position = new Vector2(-22.5f, -1.7f);
-        //         CatJoy.transform.position = new Vector2(-17.5f, -2f);
-        //         CatJoy.transform.position = new Vector2(-13f, -2.5f);
-        //         stepCompletePanel.SetActive(false);
-        //         AlphabetMatching.instance.StopHandAnim();
-        //        // NextButton.SetActive(true);
-        //        // PreviousButton.SetActive(true);
-        //         StartCoroutine(AlphabetMatching.instance.SetAlphaBallone());
-        //     }
-        // });
-
-        RabbitJoy.transform.DOScale(Vector3.one, 1.5f);
-        
-        RabbitJoy.transform.DOMoveX(RabbitJoy.transform.position.x, 3.5f).OnComplete(() =>
-         {
-             RabbitJoy.transform.DOScale(Vector3.zero, 1.5f).OnComplete(() =>
+            RabbitJoy.transform.DOScale(Vector3.one, 1.5f);
+            RabbitJoy.transform.DOMoveX(RabbitJoy.transform.position.x, 3.5f).OnComplete(() =>
              {
-                 if (AlphabetMatching.instance.AlphaSeries < 25)
+                 RabbitJoy.transform.DOScale(Vector3.zero, 1.5f).OnComplete(() =>
                  {
-                     //DogJoy.transform.position = new Vector2(-22.5f, -1.7f);
-                     //CatJoy.transform.position = new Vector2(-17.5f, -2f);
-                     //CatJoy.transform.position = new Vector2(-13f, -2.5f);
-                     stepCompletePanel.SetActive(false);
-                     AlphabetMatching.instance.StopHandAnim();
-                     // NextButton.SetActive(true);
-                     // PreviousButton.SetActive(true);
-                     StartCoroutine(AlphabetMatching.instance.SetAlphaBallone());
-                 }
+                     if (AlphabetMatching.instance.AlphaSeries < 25)
+                     {
 
+                         stepCompletePanel.SetActive(false);
+                         AlphabetMatching.instance.StopHandAnim();
+                         StartCoroutine(AlphabetMatching.instance.SetAlphaBallone());
+                     }
+                 });
              });
-
-            
-         });
+        }
     }
 
     public void PreviousBTN()

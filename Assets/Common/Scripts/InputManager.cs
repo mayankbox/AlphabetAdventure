@@ -8,7 +8,7 @@ public class InputManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (GameManager.instance.Gamestate == GameState.Playing)
+        if (GameManagerOwn.instance.Gamestate == GameState.Playing)
         {
             switch (Inputype)
             {

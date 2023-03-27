@@ -38,6 +38,7 @@ public class AlphabetMatching : MonoBehaviour
     public GameObject SameBallonePartical;
 
     [Header("Win")]
+    [SerializeField] GameObject AlphaTicket;
     [SerializeField] GameObject WinPopUp;
     [SerializeField] GameObject WinGiftImg;
     [SerializeField] GameObject Ballon1Img;
@@ -267,7 +268,12 @@ public class AlphabetMatching : MonoBehaviour
     }
      void WaitWin()
     {
-        GameManager.instance.GameComplete();
+        if(PlayerPrefs.GetInt("AlphaTicket")==0)
+        {
+            AlphaTicket.SetActive(true);
+            PlayerPrefs.SetInt("AlphaTicket", 1);
+        }
+        GameManagerOwn.instance.GameComplete();
         GreetingSoundType = 2;
         SoundManager.instance.SoundPlay(SoundName.win);
     }

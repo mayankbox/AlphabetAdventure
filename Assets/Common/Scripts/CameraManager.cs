@@ -10,7 +10,7 @@ public class CameraManager : MonoBehaviour
    
     void LateUpdate()
     {
-        if ((GameManager.instance.Gamestate == GameState.Playing || GameManager.instance.Gamestate == GameState.Preparing) && IsFollowPlayer)
+        if ((GameManagerOwn.instance.Gamestate == GameState.Playing || GameManagerOwn.instance.Gamestate == GameState.Preparing) && IsFollowPlayer)
         {
             switch (PlayerManager.instance.Inputype)
             {

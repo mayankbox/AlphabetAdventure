@@ -45,6 +45,7 @@ public class ObjectMatching : MonoBehaviour
     public GameObject[] Stars;
     public int GreetingSoundType;
     int starOnCount;
+    [SerializeField] GameObject ObjTicket;
 
     public static ObjectMatching instance;
 
@@ -54,7 +55,7 @@ public class ObjectMatching : MonoBehaviour
     }
     private void Update()
     {
-        if (GameManager.instance.Gamestate == GameState.Playing)
+        if (GameManagerOwn.instance.Gamestate == GameState.Playing)
         {
             if (IsWaitingTimmerStart == true)
             {
@@ -195,53 +196,109 @@ public class ObjectMatching : MonoBehaviour
         aa = aaa.name;
         if (aa == MainAlphaIMG.name)
         {
-
-            foreach (string ss in WrongCharList)
+            if (AlphaCounter % 5 == 0 && AlphaCounter != 0)
             {
-                if (ss == AlphaArrayIMG[AlphaCounter].name)
+                AdManager.Instance.ShowInterstitialAd(() =>
                 {
-                    if (!IsCounterMinus)
+
+                    foreach (string ss in WrongCharList)
                     {
-                        CorrectCounter++;
-                        WrongCharList.Remove(ss);
-                        // IsLastWrongChange = true;
-                        IsCounterMinus = true;
-                        break;
+                        if (ss == AlphaArrayIMG[AlphaCounter].name)
+                        {
+                            if (!IsCounterMinus)
+                            {
+                                CorrectCounter++;
+                                WrongCharList.Remove(ss);
+                                // IsLastWrongChange = true;
+                                IsCounterMinus = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    correctClickAfter = true;
+                    StopCoroutine(StartHandAnim());
+                    IsWaitingTimmerStart = false;
+                    CorrectPartical.Play();
+                    CorrectIMG.gameObject.SetActive(true);
+                    CorrectIMG.transform.SetParent(aaa.transform);
+                    CorrectIMG.rectTransform.localPosition = Vector3.zero;
+                    AlphaCounter++;
+                    HandIMG.transform.SetParent(null);
+                    HandIMG.gameObject.SetActive(false);
+                    IsHandAnim = false;
+                    SoundManager.instance.SoundPlay(SoundName.Correct);
+
+                    if (AlphaCounter > AlphaArrayIMG.Length - 1)//AlphaArrayIMG.Length-1
+                    {
+                        Invoke("WinCondition", 1f);
+                        Invoke("WaitPopUpOn", 4f);
+                        NextBtnObj.SetActive(false);
+                        PlayerPrefs.SetInt("ObjectTicket", 1);
+                        GameManagerOwn.instance.ObjTicket.transform.GetChild(1).gameObject.SetActive(false);
+                        GameManagerOwn.instance.ObjTicket.transform.GetChild(2).gameObject.SetActive(false);
+                    }
+
+                    foreach (GameObject btns in BTNs)
+                    {
+                        btns.GetComponent<Button>().enabled = false;
+                    }
+
+                    NextBtnObj.SetActive(true);
+                    BackBtnObj.SetActive(false);
+                    NextBtnObj.GetComponent<Button>().interactable = true;
+                });
+            }
+            else
+            {
+
+                foreach (string ss in WrongCharList)
+                {
+                    if (ss == AlphaArrayIMG[AlphaCounter].name)
+                    {
+                        if (!IsCounterMinus)
+                        {
+                            CorrectCounter++;
+                            WrongCharList.Remove(ss);
+                            // IsLastWrongChange = true;
+                            IsCounterMinus = true;
+                            break;
+                        }
                     }
                 }
+
+                correctClickAfter = true;
+                StopCoroutine(StartHandAnim());
+                IsWaitingTimmerStart = false;
+                CorrectPartical.Play();
+                CorrectIMG.gameObject.SetActive(true);
+                CorrectIMG.transform.SetParent(aaa.transform);
+                CorrectIMG.rectTransform.localPosition = Vector3.zero;
+                AlphaCounter++;
+                HandIMG.transform.SetParent(null);
+                HandIMG.gameObject.SetActive(false);
+                IsHandAnim = false;
+                SoundManager.instance.SoundPlay(SoundName.Correct);
+
+                if (AlphaCounter > AlphaArrayIMG.Length - 1)//AlphaArrayIMG.Length-1
+                {
+                    Invoke("WinCondition", 1f);
+                    Invoke("WaitPopUpOn", 4f);
+                    NextBtnObj.SetActive(false);
+                    PlayerPrefs.SetInt("ObjectTicket", 1);
+                    GameManagerOwn.instance.ObjTicket.transform.GetChild(1).gameObject.SetActive(false);
+                    GameManagerOwn.instance.ObjTicket.transform.GetChild(2).gameObject.SetActive(false);
+                }
+
+                foreach (GameObject btns in BTNs)
+                {
+                    btns.GetComponent<Button>().enabled = false;
+                }
+
+                NextBtnObj.SetActive(true);
+                BackBtnObj.SetActive(false);
+                NextBtnObj.GetComponent<Button>().interactable = true;
             }
-
-            correctClickAfter = true;
-            StopCoroutine(StartHandAnim());
-            IsWaitingTimmerStart = false;
-            CorrectPartical.Play();
-            CorrectIMG.gameObject.SetActive(true);
-            CorrectIMG.transform.SetParent(aaa.transform);
-            CorrectIMG.rectTransform.localPosition = Vector3.zero;
-            AlphaCounter++;
-            HandIMG.transform.SetParent(null);
-            HandIMG.gameObject.SetActive(false);
-            IsHandAnim = false;
-            SoundManager.instance.SoundPlay(SoundName.Correct);
-
-            if (AlphaCounter > 4)//AlphaArrayIMG.Length-1
-            {
-                Invoke("WinCondition", 1f);
-                Invoke("WaitPopUpOn", 4f);
-                NextBtnObj.SetActive(false);
-                PlayerPrefs.SetInt("ObjectTicket", 1);
-                GameManager.instance.ObjTicket.transform.GetChild(1).gameObject.SetActive(false);
-            }
-
-            foreach (GameObject btns in BTNs)
-            {
-                btns.GetComponent<Button>().enabled = false;
-            }
-
-            NextBtnObj.SetActive(true);
-            BackBtnObj.SetActive(false);
-            NextBtnObj.GetComponent<Button>().interactable = true;
-
         }
         else
         {
@@ -281,7 +338,12 @@ public class ObjectMatching : MonoBehaviour
 
     void WinCondition()
     {
-        GameManager.instance.GameComplete();
+        if(PlayerPrefs.GetInt("ObjTicket")==0)
+        {
+            ObjTicket.SetActive(true);
+            PlayerPrefs.SetInt("ObjTicket", 1);
+        }
+        GameManagerOwn.instance.GameComplete();
         ScoreTxt.text = CorrectCounter.ToString();
         SoundManager.instance.SoundPlay(SoundName.win);
         if (CorrectCounter < 20)

@@ -17,6 +17,7 @@ public class CanvasManager : MonoBehaviour
     public GameObject SettingPanel;
     public GameObject LevelPanel;
     public GameObject PausePanel;
+    public GameObject ExitPanel;
 
     [SerializeField]
     Image levelProgressImage;
@@ -66,7 +67,7 @@ public class CanvasManager : MonoBehaviour
         PlayingPanel.SetActive(false);
         GameOverPanel.SetActive(false);
         GameCompletePanel.SetActive(false);
-
+        ExitPanel.SetActive(false);
         SoundToggle.gameObject.SetActive(false);
         SetMusicToggle();
         SetSoundToggle();
@@ -100,7 +101,23 @@ public class CanvasManager : MonoBehaviour
         }
     }
 
-   IEnumerator SplashClick()
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)&&HomePanel.activeInHierarchy==true)
+        {
+            ExitPanel.SetActive(true);
+        }
+    }
+
+    public void ExitYes()
+    {
+        Application.Quit();
+    }
+    public void ExitNo()
+    {
+        ExitPanel.SetActive(false);
+    }
+    IEnumerator SplashClick()
     {
         yield return new WaitForSeconds(5.5f);
         SoundToggle.gameObject.SetActive(true);
@@ -120,32 +137,51 @@ public class CanvasManager : MonoBehaviour
     public void GameStart()
     {
         SoundManager.instance.SoundPlay(SoundName.ButtonCllick);
-        HomePanel.SetActive(false);
-        StartPanel.SetActive(false);
-        PlayingPanel.SetActive(true);
-        GameManager.instance.GameStart();
+
+        
+        GameManagerOwn.instance.GameStart();
 
         switch(PlayerPrefs.GetString("GameType"))
         {
             case "ObjectMatching":
-                ObjectMatchingMode();
+                AdManager.Instance.ShowInterstitialAd(() =>
+                {
+                    ObjectMatchingMode();
+                    HomePanel.SetActive(false);
+                    StartPanel.SetActive(false);
+                    PlayingPanel.SetActive(true);
+                });
+
                 break;
             case "AlphabetMatching":
-                AlphabetMatchingMode();
+                AdManager.Instance.ShowInterstitialAd(() =>
+                {
+                    AlphabetMatchingMode();
+                    HomePanel.SetActive(false);
+                    StartPanel.SetActive(false);
+                    PlayingPanel.SetActive(true);
+                });
+
                 break;
             case "Train":
-                TrainMode();
+                //AdManager.Instance.ShowInterstitialAd(() =>
+                //{
+                    TrainMode();
+                    HomePanel.SetActive(false);
+                    StartPanel.SetActive(false);
+                    PlayingPanel.SetActive(true);
+               // });
+
                 break;
             case "Tracing":
                 TracingMode();
                 break;
         }
-        
     }
 
     void ObjectMatchingMode()
     {
-        GameManager.instance.gametype = GameType.ObjectMatching;
+        GameManagerOwn.instance.gametype = GameType.ObjectMatching;
         playObjectMatching.SetActive(true);
         ObjectMatchingManager.SetActive(true);
         ObjectMatching.instance.GenrateMainTxt();
@@ -160,7 +196,7 @@ public class CanvasManager : MonoBehaviour
     }
     void AlphabetMatchingMode()
     {
-        GameManager.instance.gametype = GameType.AlphabetMatching;
+        GameManagerOwn.instance.gametype = GameType.AlphabetMatching;
         playAlphabetMatching.SetActive(true);
         AlphabetMatchingManager.SetActive(true);
         AlphabetMatchingwin.SetActive(true);
@@ -176,28 +212,25 @@ public class CanvasManager : MonoBehaviour
         Invoke("TicketCollecter", 2f);
     }
 
-    void TicketCollecter()
+   public void TicketCollecter()
     {
-        if (GameManager.instance.ticketCounter == 3)
+        if (GameManagerOwn.instance.ticketCounter == 3)
         {
             TicketCheck.SetActive(false);
 
-            GameManager.instance.gametype = GameType.Train;
+            GameManagerOwn.instance.gametype = GameType.Train;
             playTrain.SetActive(true);
             TrainManagerr.SetActive(true);
             Trainwin.SetActive(true);
 
-
             StartCoroutine(TrainManager.instance.TrainMove());
 
-
-            
         }
     }
 
     void TracingMode()
     {
-        GameManager.instance.gametype = GameType.Tracing;
+        GameManagerOwn.instance.gametype = GameType.Tracing;
         if (TicketCheck.activeSelf == true)
         {
             TicketCheck.SetActive(false);
@@ -252,7 +285,7 @@ public class CanvasManager : MonoBehaviour
 
     public void RestartLoad()
     {
-        PlayerPrefs.SetString("GameType", (GameManager.instance.gametype).ToString());
+        PlayerPrefs.SetString("GameType", (GameManagerOwn.instance.gametype).ToString());
         Time.timeScale = 1;
         SceneLoad();
         PlayerPrefs.SetInt("IsHomeFalse", 1);
@@ -336,11 +369,14 @@ public class CanvasManager : MonoBehaviour
         {
             SoundToggle.isOn = true;
             SoundAudiosource.volume = 0;
+            MusicAudiosource.volume = 0;
         }
         else
         {
             SoundToggle.isOn = false;
             SoundAudiosource.volume = 1;
+            MusicAudiosource.volume = 1;
+
         }
     }
 
@@ -350,11 +386,15 @@ public class CanvasManager : MonoBehaviour
         {
             GameConfige.Sound = 0;
             SoundAudiosource.volume = 0;
+            MusicAudiosource.volume = 0;
+
         }
         else
         {
             GameConfige.Sound = 1;
             SoundAudiosource.volume = 1;
+            MusicAudiosource.volume = 1;
+
             if (SettingPanel.activeSelf)
             {
                 SoundManager.instance.SoundPlay(SoundName.ButtonCllick);
